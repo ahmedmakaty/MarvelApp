@@ -8,4 +8,6 @@ import com.example.mindabloom.marvelapp.mvp.Presenters.OnSearchResultFinishedLis
 
 public interface SearchInteractor {
     void searchByName(String name, String apiKey, String hash, long timestamp, OnSearchResultFinishedListener presenter);
+
+    void saveNameInDatabase(String name);
 }

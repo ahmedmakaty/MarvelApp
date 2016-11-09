@@ -3,6 +3,7 @@ package com.example.mindabloom.marvelapp.mvp.Interactors;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.mindabloom.marvelapp.Database.MarvelDatabaseHelper;
 import com.example.mindabloom.marvelapp.MarvelApi.MarvelApiClient;
 import com.example.mindabloom.marvelapp.MarvelApi.MarvelApiInterface;
 import com.example.mindabloom.marvelapp.mvp.Presenters.OnSearchResultFinishedListener;
@@ -29,9 +30,11 @@ public class SearchInteractorImp implements SearchInteractor {
 
     private Context context;
     private MarvelApiInterface marvelApiInterface;
+    private MarvelDatabaseHelper marvelDatabaseHelper;
 
     public SearchInteractorImp(Context context) {
         this.context = context;
+        marvelDatabaseHelper = new MarvelDatabaseHelper(context);
     }
 
     @Override
@@ -89,5 +92,10 @@ public class SearchInteractorImp implements SearchInteractor {
                 listener.onApiError();
             }
         });
+    }
+
+    @Override
+    public void saveNameInDatabase(String name) {
+        marvelDatabaseHelper.addName(name);
     }
 }

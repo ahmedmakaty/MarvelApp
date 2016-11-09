@@ -63,6 +63,10 @@ public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinish
     @Override
     public void onSuccess(String name, String description, String imagePath, String imageExtension) {
         view.hideLoading();
+
+        /*saving the character name in the database after successful fetch*/
+        searchInteractor.saveNameInDatabase(name);
+
         Intent intent = new Intent(context, ResultScreen.class);
         intent.putExtra("NAME", name);
         intent.putExtra("DESCRIPTION", description);

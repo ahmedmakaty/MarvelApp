@@ -62,7 +62,12 @@ public class ResultScreen extends AppCompatActivity implements ResultView {
     @Override
     public void initializeViews() {
         name.setText(characterName);
-        description.setText(characterDescription);
+
+        if (characterDescription != null && !characterDescription.matches("")) {
+            description.setText(characterDescription);
+        } else {
+            description.setText("The description is not available at this moment");
+        }
 
         String url = "";
         url += characterImagePath + "/" + IMAGE_VARIANT + "." + characterImageExtension;
