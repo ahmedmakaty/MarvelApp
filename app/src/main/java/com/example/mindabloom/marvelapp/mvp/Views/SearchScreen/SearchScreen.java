@@ -1,0 +1,104 @@
+package com.example.mindabloom.marvelapp.mvp.Views.SearchScreen;
+
+import android.app.ProgressDialog;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.mindabloom.marvelapp.Adapters.MarvelHistoryAdapter;
+import com.example.mindabloom.marvelapp.R;
+import com.example.mindabloom.marvelapp.mvp.Presenters.SearchPresenter;
+import com.example.mindabloom.marvelapp.mvp.Presenters.SearchPresenterImp;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class SearchScreen extends AppCompatActivity implements SearchView {
+
+    @Bind(R.id.character_name)
+    EditText characterName;
+    @Bind(R.id.show_button)
+    Button show;
+    @Bind(R.id.history_list)
+    RecyclerView history;
+    @Bind(R.id.wrong_name_text)
+    TextView wrongNameError;
+
+    ProgressDialog progressDialog;
+
+    private SearchPresenter presenter;
+    private MarvelHistoryAdapter marvelHistoryAdapter;
+
+    List<String> names = new ArrayList<String>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search_screen);
+
+        ButterKnife.bind(this);
+        presenter = new SearchPresenterImp(this, this);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.loading));
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        names.add("No Man");
+        names.add("Iron Man");
+        names.add("Bat Man");
+        names.add("Super Man");
+
+        marvelHistoryAdapter = new MarvelHistoryAdapter(this, names);
+        history.setAdapter(marvelHistoryAdapter);
+        history.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @OnClick(R.id.show_button)
+    public void showCharacter() {
+        hideWrongNameError();
+        String name = characterName.getText().toString();
+        presenter.searchByName(name);
+    }
+
+    @Override
+    public void showLoading() {
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
+    }
+
+    @Override
+    public void hideLoading() {
+        if (progressDialog != null) {
+            progressDialog.hide();
+        }
+    }
+
+    @Override
+    public void showApiError(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showWrongNameError() {
+        wrongNameError.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideWrongNameError() {
+        wrongNameError.setVisibility(View.GONE);
+    }
+}
