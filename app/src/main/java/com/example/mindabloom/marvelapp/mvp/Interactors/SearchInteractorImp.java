@@ -40,6 +40,7 @@ public class SearchInteractorImp implements SearchInteractor {
 
     @Override
     public void searchByName(String name, String apiKey, String hash, long timestamp, final OnSearchResultFinishedListener listener) {
+
         HashMap<String, Object> getArgs = new HashMap<>();
         getArgs.put("name", name);
         getArgs.put("apikey", apiKey);

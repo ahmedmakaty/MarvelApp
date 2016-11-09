@@ -28,6 +28,7 @@ import butterknife.OnClick;
 
 public class SearchScreen extends AppCompatActivity implements SearchView {
 
+    //Using butterknife library to bind views to our layout without using findViewById inside onCreate
     @Bind(R.id.character_name)
     EditText characterName;
     @Bind(R.id.show_button)
@@ -44,6 +45,7 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
 
     private List<String> names = new ArrayList<String>();
 
+    //Our history list item click listener
     private MarvelHistoryAdapter.OnItemClickListener onItemClickListener = new MarvelHistoryAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(String name) {
