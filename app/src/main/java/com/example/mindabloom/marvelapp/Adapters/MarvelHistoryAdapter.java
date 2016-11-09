@@ -18,15 +18,20 @@ import java.util.List;
 
 public class MarvelHistoryAdapter extends RecyclerView.Adapter<MarvelHistoryAdapter.GroupViewHolder> {
 
+    public interface OnItemClickListener {
+        void onItemClick(String name);
+    }
+
+    private final OnItemClickListener listener;
     List<String> names = new ArrayList<String>();
     LayoutInflater layoutInflater;
     Context context;
 
-    public MarvelHistoryAdapter(Context context, List<String> names) {
+    public MarvelHistoryAdapter(Context context, List<String> names, OnItemClickListener listener) {
         this.context = context;
-        layoutInflater = LayoutInflater.from(context);
         this.names = names;
-        //Toast.makeText(context, images.size()+"", Toast.LENGTH_SHORT).show();
+        this.listener = listener;
+        layoutInflater = LayoutInflater.from(context);
     }
 
 
@@ -48,11 +53,12 @@ public class MarvelHistoryAdapter extends RecyclerView.Adapter<MarvelHistoryAdap
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listener.onItemClick(name);
             }
         });
     }
 
-    public String getItem(int pos){
+    public String getItem(int pos) {
         return names.get(pos);
     }
 

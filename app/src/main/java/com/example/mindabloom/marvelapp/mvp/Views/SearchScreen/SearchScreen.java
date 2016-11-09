@@ -37,12 +37,19 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
     @Bind(R.id.wrong_name_text)
     TextView wrongNameError;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     private SearchPresenter presenter;
     private MarvelHistoryAdapter marvelHistoryAdapter;
 
-    List<String> names = new ArrayList<String>();
+    private List<String> names = new ArrayList<String>();
+
+    private MarvelHistoryAdapter.OnItemClickListener onItemClickListener = new MarvelHistoryAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(String name) {
+            presenter.searchByName(name);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +63,16 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
         progressDialog.setMessage(getString(R.string.loading));
         progressDialog.setCanceledOnTouchOutside(false);
 
-        names.add("No Man");
-        names.add("Iron Man");
-        names.add("Bat Man");
-        names.add("Super Man");
-
-        marvelHistoryAdapter = new MarvelHistoryAdapter(this, names);
-        history.setAdapter(marvelHistoryAdapter);
         history.setLayoutManager(new LinearLayoutManager(this));
+
+        presenter.getSearchHistory();
+    }
+
+    @Override
+    public void populateHistoryList(List<String> names) {
+        marvelHistoryAdapter = new MarvelHistoryAdapter(this, names, onItemClickListener);
+        history.setAdapter(marvelHistoryAdapter);
+        marvelHistoryAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.show_button)
@@ -100,5 +109,11 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
     @Override
     public void hideWrongNameError() {
         wrongNameError.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.getSearchHistory();
     }
 }

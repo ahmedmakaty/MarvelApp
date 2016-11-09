@@ -11,7 +11,9 @@ import com.example.mindabloom.marvelapp.mvp.Interactors.SearchInteractorImp;
 import com.example.mindabloom.marvelapp.mvp.Views.ResultScreen.ResultScreen;
 import com.example.mindabloom.marvelapp.mvp.Views.SearchScreen.SearchView;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.example.mindabloom.marvelapp.Injectors.PropertiesReaderInjector.propertiesReader;
 
@@ -46,6 +48,13 @@ public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinish
 
         view.showLoading();
         searchInteractor.searchByName(name, publicKey, hash, timestamp, this);
+    }
+
+    @Override
+    public void getSearchHistory() {
+        List<String> names = new ArrayList<>();
+        names = searchInteractor.getSearchHistory();
+        view.populateHistoryList(names);
     }
 
     @Override

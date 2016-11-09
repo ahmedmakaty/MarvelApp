@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -97,5 +98,10 @@ public class SearchInteractorImp implements SearchInteractor {
     @Override
     public void saveNameInDatabase(String name) {
         marvelDatabaseHelper.addName(name);
+    }
+
+    @Override
+    public List<String> getSearchHistory() {
+        return marvelDatabaseHelper.getHistory();
     }
 }

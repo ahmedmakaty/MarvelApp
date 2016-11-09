@@ -62,7 +62,7 @@ public class MarvelDatabaseHelper extends SQLiteOpenHelper {
 
         List<String> results = new ArrayList<String>();
         SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery = "SELECT " + NAME + " FROM " + TABLE_NAME + " ORDER BY " + ID + " DESC LIMIT 5";
+        String selectQuery = "SELECT DISTINCT " + NAME + " FROM " + TABLE_NAME + " ORDER BY " + ID + " DESC LIMIT 5";
         Cursor cursor = db.rawQuery(selectQuery, null);
         if(cursor.moveToFirst()){
             do {
