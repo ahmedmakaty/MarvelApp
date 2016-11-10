@@ -43,7 +43,7 @@ public class PropertiesReader {
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            Log.e("AssetsPropertyReader",e.toString());
+            //Log.e("AssetsPropertyReader",e.toString());
         }
         return properties;
     }

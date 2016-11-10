@@ -32,7 +32,7 @@ import butterknife.OnClick;
 
 public class SearchScreen extends AppCompatActivity implements SearchView {
 
-    //Using butterknife library to bind views to our layout without using findViewById inside onCreate
+    //using butterknife library to bind views to our layout without using findViewById inside onCreate
     @Bind(R.id.character_name)
     EditText characterName;
     @Bind(R.id.show_button)
@@ -61,15 +61,20 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
         presenter = new SearchPresenterImp(interactor);
         presenter.attachView(this);
 
+        /* initializing the progress dialog that I will show during handling api request*/
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.loading));
         progressDialog.setCanceledOnTouchOutside(false);
 
         history.setLayoutManager(new LinearLayoutManager(this));
 
+        /*calling getSearchHistory() retrieves the latest successfully searched character names*/
         presenter.getSearchHistory();
     }
 
+    /*called by the presenter after the interactor is finished fetching the search history
+    * is used to populate the recycler view holding the history items
+    * */
     @Override
     public void populateHistoryList(List<String> names) {
         marvelHistoryAdapter = new MarvelHistoryAdapter(this, names, onItemClickListener);
@@ -77,7 +82,7 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
         marvelHistoryAdapter.notifyDataSetChanged();
     }
 
-    //Our history list item click listener, the item name is provided to the interface
+    //our history list item click listener, the item name is provided to the interface
     private MarvelHistoryAdapter.OnItemClickListener onItemClickListener = new MarvelHistoryAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(String name) {
@@ -87,6 +92,8 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
         }
     };
 
+
+    /*is used to redirect to the result screen after a successful search*/
     @Override
     public void startResultActivity(String name, String description, String imagePath, String imageExtension) {
         Intent intent = new Intent(this, ResultScreen.class);
@@ -97,13 +104,19 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
         startActivity(intent);
     }
 
+    /*handles the click of the show button (butter knife listener)*/
     @OnClick(R.id.show_button)
     public void showCharacter() {
+        /*
+        * hiding the wrong name error if exists then extracts the text inside the edittext
+        * then calls searchByName() to communicate with interactor
+        */
         hideWrongNameError();
         String name = characterName.getText().toString();
         presenter.searchByName(name);
     }
 
+    /*shows progress loading dialog*/
     @Override
     public void showLoading() {
         if (progressDialog != null) {
@@ -111,6 +124,7 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
         }
     }
 
+    /*hides the progress dialog*/
     @Override
     public void hideLoading() {
         if (progressDialog != null) {
@@ -118,17 +132,20 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
         }
     }
 
+    /*generate a toast carrying a message after api error*/
     @Override
     public void showApiError(int resId) {
         Toast.makeText(this, getString(resId), Toast.LENGTH_LONG).show();
     }
 
+    /*shows wrong name error*/
     @Override
     public void showWrongNameError(int resId) {
         wrongNameError.setText(getString(resId));
         wrongNameError.setVisibility(View.VISIBLE);
     }
 
+    /*hides wrong name error*/
     @Override
     public void hideWrongNameError() {
         wrongNameError.setVisibility(View.GONE);
@@ -143,6 +160,7 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*this function is responsible for dropping the view passed to the presenter to prevent memory leaks*/
         presenter.onDestroy();
     }
 }

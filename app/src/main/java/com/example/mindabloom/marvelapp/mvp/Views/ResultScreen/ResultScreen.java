@@ -38,6 +38,10 @@ public class ResultScreen extends AppCompatActivity implements ResultView {
 
         ButterKnife.bind(this);
 
+        /*
+        *retrieve passed bundle data if new instance, or restoring data from saved bundle
+        *in case of configuration change like rotating
+        */
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             characterName = extras.getString("NAME");
@@ -59,19 +63,31 @@ public class ResultScreen extends AppCompatActivity implements ResultView {
         initializeViews();
     }
 
+    /*
+    *initializeViews() is used to populate the layout views with character data
+    */
     @Override
     public void initializeViews() {
         name.setText(characterName);
 
+
+        //special case when the returned description is empty
         if (characterDescription != null && !characterDescription.matches("")) {
             description.setText(characterDescription);
         } else {
             description.setText(getString(R.string.no_description));
         }
 
+        /*
+        *concatenate the image url as per api documentation
+        */
         String url = "";
         url += characterImagePath + "/" + IMAGE_VARIANT + "." + characterImageExtension;
 
+
+        /*
+        *using glide lib to load and cache the character image from the compsed url
+        */
         Glide.with(getApplicationContext())
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -79,6 +95,10 @@ public class ResultScreen extends AppCompatActivity implements ResultView {
                 .into(thumbnail);
     }
 
+
+    /*this is used to save the passed data to the activity in case any change in configuration like
+    *rotating the screen
+    */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

@@ -30,13 +30,18 @@ public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinish
     public static final String FILE_NAME = "keys.properties";
 
     public SearchPresenterImp(SearchInteractor searchInteractor) {
-        this.view = view;
         this.searchInteractor = searchInteractor;
     }
 
+    /*
+    *shows loading, crafting arguments passed to the get request by retrieving the public and private
+    * keys  from the properties file using a static function to an injected object of propertiesReader
+    * then uses the Digester to generate the md5 hash from the timestamp, private and public keys
+    * passing the arguments to the interactor to perform the api request
+    */
     @Override
     public void searchByName(String name) {
-
+        view.showLoading();
         Date date = new Date();
         long timestamp = date.getTime();
 
@@ -44,13 +49,16 @@ public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinish
         String privateKey = propertiesReader(getContext()).getProperties(FILE_NAME).getProperty("privateKey");
         String hash = Digester.md5Digest(String.valueOf(timestamp) + privateKey + publicKey);
 
-        Log.d("Keys", "Public key:" + publicKey + " private key:" + privateKey + " timestamp:" + timestamp);
-        Log.d("Hash", "Hash:" + hash);
+        //Log.d("Keys", "Public key:" + publicKey + " private key:" + privateKey + " timestamp:" + timestamp);
+        //Log.d("Hash", "Hash:" + hash);
 
-        view.showLoading();
         searchInteractor.searchByName(name, publicKey, hash, timestamp, this);
     }
 
+    /*
+    *tells the interactor to retrieve the latest successfully searched characters from the database
+    *then tells the view to populate the recycler view with the results
+    */
     @Override
     public void getSearchHistory() {
         List<String> names = new ArrayList<>();
@@ -58,30 +66,49 @@ public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinish
         view.populateHistoryList(names);
     }
 
+    /*
+    *dropping the view in case of activity destroy to prevent memory leaks
+    */
     @Override
     public void onDestroy() {
         view = null;
     }
 
+    /*
+    * attach the view to the presenter which will be used by the presenter to communicate with the
+    * activity
+    */
     @Override
     public void attachView(SearchScreen searchScreen) {
         this.view = searchScreen;
     }
 
+    /*
+    * hides the progress dialog and tells the view to show the api error action
+    */
     @Override
     public void onApiError(int resId) {
         view.hideLoading();
         view.showApiError(resId);
     }
 
+    /*
+    * hides the progress dialog and tells the view to show the wrong name action
+    */
     @Override
     public void onWrongNameError(int resId) {
         view.hideLoading();
         view.showWrongNameError(resId);
     }
 
+
+    /*
+    * hides the progress dialog and tells the interactor to save the successful searched name
+    * in the sqlite database then tells the view to navigate to the result screen
+    */
     @Override
     public void onSuccess(String name, String description, String imagePath, String imageExtension) {
+
         view.hideLoading();
 
         /*saving the character name in the database after successful fetch*/
