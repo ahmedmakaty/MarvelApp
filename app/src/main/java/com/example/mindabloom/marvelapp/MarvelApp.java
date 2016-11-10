@@ -7,6 +7,7 @@ import static okhttp3.internal.Internal.instance;
 
 /**
  * Created by Ahmed Abdelaziz on 11/10/2016.
+ * This is a singleton controller for the application
  */
 
 public class MarvelApp extends Application {

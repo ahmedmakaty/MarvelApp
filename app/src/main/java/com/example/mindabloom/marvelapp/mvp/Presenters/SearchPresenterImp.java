@@ -20,7 +20,7 @@ import static com.example.mindabloom.marvelapp.Injectors.PropertiesReaderInjecto
 import static com.example.mindabloom.marvelapp.MarvelApp.getContext;
 
 /**
- * Created by Ahmed Abdelaziz on 11/9/2016.
+ * Created by Ahmed Abdelaziz on 11/10/2016.
  */
 
 public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinishedListener {

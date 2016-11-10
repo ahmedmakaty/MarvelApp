@@ -5,7 +5,7 @@ import android.content.Context;
 import com.example.mindabloom.marvelapp.Helpers.PropertiesReader;
 
 /**
- * Created by Ahmed Abdelaziz on 11/9/2016.
+ * Created by Ahmed Abdelaziz on 11/10/2016.
  */
 
 public class PropertiesReaderInjector {

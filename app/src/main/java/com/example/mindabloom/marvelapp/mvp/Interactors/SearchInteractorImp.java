@@ -27,7 +27,7 @@ import retrofit2.Response;
 import static com.example.mindabloom.marvelapp.MarvelApp.getContext;
 
 /**
- * Created by Ahmed Abdelaziz on 11/9/2016.
+ * Created by Ahmed Abdelaziz on 11/10/2016.
  */
 
 public class SearchInteractorImp implements SearchInteractor {
@@ -64,7 +64,8 @@ public class SearchInteractorImp implements SearchInteractor {
                     try {
                         /*
                         * Here I could have used a model and let retrofit and gson handle the parsing(json to pojo)
-                        * but I wanted to parse the response json object myself
+                        * or use Gson to map the json response to a pojo
+                        * but I wanted to parse the response JSON object myself
                         */
                         JSONObject responseBody = new JSONObject(response.body().string());
                         JSONObject data = responseBody.getJSONObject("data");

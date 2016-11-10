@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Ahmed Abdelaziz on 11/9/2016.
+ * Created by Ahmed Abdelaziz on 11/10/2016.
  */
 
 public class MarvelHistoryAdapter extends RecyclerView.Adapter<MarvelHistoryAdapter.GroupViewHolder> {
@@ -36,7 +36,6 @@ public class MarvelHistoryAdapter extends RecyclerView.Adapter<MarvelHistoryAdap
         this.listener = listener;
         layoutInflater = LayoutInflater.from(context);
     }
-
 
     @Override
     public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

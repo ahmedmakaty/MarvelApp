@@ -5,7 +5,7 @@ import com.example.mindabloom.marvelapp.mvp.Presenters.OnSearchResultFinishedLis
 import java.util.List;
 
 /**
- * Created by Ahmed Abdelaziz on 11/9/2016.
+ * Created by Ahmed Abdelaziz on 11/10/2016.
  */
 
 public interface SearchInteractor {

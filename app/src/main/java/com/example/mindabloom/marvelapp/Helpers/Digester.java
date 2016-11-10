@@ -5,7 +5,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
 /**
- * Created by Ahmed Abdelaziz on 11/9/2016.
+ * Created by Ahmed Abdelaziz on 11/10/2016.
  */
 
 public class Digester {
