@@ -9,9 +9,11 @@ import java.util.List;
 public interface SearchView {
     void showLoading();
     void hideLoading();
-    void showApiError(String error);
+    void showApiError(int resId);
 
-    void showWrongNameError();
+    void showWrongNameError(int resId);
     void hideWrongNameError();
     void populateHistoryList(List<String> names);
+
+    void startResultActivity(String name, String description, String imagePath, String imageExtension);
 }

@@ -1,6 +1,7 @@
 package com.example.mindabloom.marvelapp.mvp.Views.SearchScreen;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,8 +17,11 @@ import android.widget.Toast;
 
 import com.example.mindabloom.marvelapp.Adapters.MarvelHistoryAdapter;
 import com.example.mindabloom.marvelapp.R;
+import com.example.mindabloom.marvelapp.mvp.Interactors.SearchInteractor;
+import com.example.mindabloom.marvelapp.mvp.Interactors.SearchInteractorImp;
 import com.example.mindabloom.marvelapp.mvp.Presenters.SearchPresenter;
 import com.example.mindabloom.marvelapp.mvp.Presenters.SearchPresenterImp;
+import com.example.mindabloom.marvelapp.mvp.Views.ResultScreen.ResultScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +45,10 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
     private ProgressDialog progressDialog;
 
     private SearchPresenter presenter;
+    private SearchInteractor interactor;
     private MarvelHistoryAdapter marvelHistoryAdapter;
 
     private List<String> names = new ArrayList<String>();
-
-    //Our history list item click listener
-    private MarvelHistoryAdapter.OnItemClickListener onItemClickListener = new MarvelHistoryAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClick(String name) {
-            presenter.searchByName(name);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +56,10 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
         setContentView(R.layout.activity_search_screen);
 
         ButterKnife.bind(this);
-        presenter = new SearchPresenterImp(this, this);
+
+        interactor = new SearchInteractorImp();
+        presenter = new SearchPresenterImp(interactor);
+        presenter.attachView(this);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.loading));
@@ -75,6 +75,26 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
         marvelHistoryAdapter = new MarvelHistoryAdapter(this, names, onItemClickListener);
         history.setAdapter(marvelHistoryAdapter);
         marvelHistoryAdapter.notifyDataSetChanged();
+    }
+
+    //Our history list item click listener, the item name is provided to the interface
+    private MarvelHistoryAdapter.OnItemClickListener onItemClickListener = new MarvelHistoryAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(String name) {
+            hideWrongNameError();
+            characterName.setText(null);
+            presenter.searchByName(name);
+        }
+    };
+
+    @Override
+    public void startResultActivity(String name, String description, String imagePath, String imageExtension) {
+        Intent intent = new Intent(this, ResultScreen.class);
+        intent.putExtra("NAME", name);
+        intent.putExtra("DESCRIPTION", description);
+        intent.putExtra("IMAGEPATH", imagePath);
+        intent.putExtra("IMAGEEXTENSION", imageExtension);
+        startActivity(intent);
     }
 
     @OnClick(R.id.show_button)
@@ -99,12 +119,13 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
     }
 
     @Override
-    public void showApiError(String error) {
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+    public void showApiError(int resId) {
+        Toast.makeText(this, getString(resId), Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void showWrongNameError() {
+    public void showWrongNameError(int resId) {
+        wrongNameError.setText(getString(resId));
         wrongNameError.setVisibility(View.VISIBLE);
     }
 
@@ -117,5 +138,11 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
     protected void onResume() {
         super.onResume();
         presenter.getSearchHistory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 }

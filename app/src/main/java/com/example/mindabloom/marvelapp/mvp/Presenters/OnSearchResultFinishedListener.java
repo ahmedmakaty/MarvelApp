@@ -5,8 +5,8 @@ package com.example.mindabloom.marvelapp.mvp.Presenters;
  */
 
 public interface OnSearchResultFinishedListener {
-    void onApiError();
-    void onWrongNameError();
+    void onApiError(int resId);
+    void onWrongNameError(int resId);
 
     void onSuccess(String name, String description, String imagePath, String imageExtension);
 }

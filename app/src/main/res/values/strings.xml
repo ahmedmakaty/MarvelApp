@@ -4,4 +4,5 @@
     <string name="api_error">An error happened</string>
     <string name="wrong_name_error">The entered name is wrong</string>
     <string name="input_field_hint">Character</string>
+    <string name="no_description">This character has no description</string>
 </resources>

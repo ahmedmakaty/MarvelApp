@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public interface SearchInteractor {
-    void searchByName(String name, String apiKey, String hash, long timestamp, OnSearchResultFinishedListener presenter);
+    void searchByName(String name, String apiKey, String hash, long timestamp, OnSearchResultFinishedListener listener);
 
     void saveNameInDatabase(String name);
 

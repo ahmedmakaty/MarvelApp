@@ -66,7 +66,7 @@ public class ResultScreen extends AppCompatActivity implements ResultView {
         if (characterDescription != null && !characterDescription.matches("")) {
             description.setText(characterDescription);
         } else {
-            description.setText("The description is not available at this moment");
+            description.setText(getString(R.string.no_description));
         }
 
         String url = "";

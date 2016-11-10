@@ -9,6 +9,7 @@ import com.example.mindabloom.marvelapp.R;
 import com.example.mindabloom.marvelapp.mvp.Interactors.SearchInteractor;
 import com.example.mindabloom.marvelapp.mvp.Interactors.SearchInteractorImp;
 import com.example.mindabloom.marvelapp.mvp.Views.ResultScreen.ResultScreen;
+import com.example.mindabloom.marvelapp.mvp.Views.SearchScreen.SearchScreen;
 import com.example.mindabloom.marvelapp.mvp.Views.SearchScreen.SearchView;
 
 import java.util.ArrayList;
@@ -16,21 +17,21 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.mindabloom.marvelapp.Injectors.PropertiesReaderInjector.propertiesReader;
+import static com.example.mindabloom.marvelapp.MarvelApp.getContext;
 
 /**
  * Created by Ahmed Abdelaziz on 11/9/2016.
  */
 
 public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinishedListener {
-    private Context context;
+
     private SearchView view;
     private SearchInteractor searchInteractor;
     public static final String FILE_NAME = "keys.properties";
 
-    public SearchPresenterImp(Context context, SearchView view) {
-        this.context = context;
+    public SearchPresenterImp(SearchInteractor searchInteractor) {
         this.view = view;
-        this.searchInteractor = new SearchInteractorImp(context);
+        this.searchInteractor = searchInteractor;
     }
 
     @Override
@@ -39,8 +40,8 @@ public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinish
         Date date = new Date();
         long timestamp = date.getTime();
 
-        String publicKey = propertiesReader(context).getProperties(FILE_NAME).getProperty("publicKey");
-        String privateKey = propertiesReader(context).getProperties(FILE_NAME).getProperty("privateKey");
+        String publicKey = propertiesReader(getContext()).getProperties(FILE_NAME).getProperty("publicKey");
+        String privateKey = propertiesReader(getContext()).getProperties(FILE_NAME).getProperty("privateKey");
         String hash = Digester.md5Digest(String.valueOf(timestamp) + privateKey + publicKey);
 
         Log.d("Keys", "Public key:" + publicKey + " private key:" + privateKey + " timestamp:" + timestamp);
@@ -58,15 +59,25 @@ public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinish
     }
 
     @Override
-    public void onApiError() {
-        view.hideLoading();
-        view.showApiError(context.getString(R.string.api_error));
+    public void onDestroy() {
+        view = null;
     }
 
     @Override
-    public void onWrongNameError() {
+    public void attachView(SearchScreen searchScreen) {
+        this.view = searchScreen;
+    }
+
+    @Override
+    public void onApiError(int resId) {
         view.hideLoading();
-        view.showWrongNameError();
+        view.showApiError(resId);
+    }
+
+    @Override
+    public void onWrongNameError(int resId) {
+        view.hideLoading();
+        view.showWrongNameError(resId);
     }
 
     @Override
@@ -76,11 +87,6 @@ public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinish
         /*saving the character name in the database after successful fetch*/
         searchInteractor.saveNameInDatabase(name);
 
-        Intent intent = new Intent(context, ResultScreen.class);
-        intent.putExtra("NAME", name);
-        intent.putExtra("DESCRIPTION", description);
-        intent.putExtra("IMAGEPATH", imagePath);
-        intent.putExtra("IMAGEEXTENSION", imageExtension);
-        context.startActivity(intent);
+        view.startResultActivity(name, description, imagePath, imageExtension);
     }
 }

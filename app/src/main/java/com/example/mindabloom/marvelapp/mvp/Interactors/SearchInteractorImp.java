@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.mindabloom.marvelapp.Database.MarvelDatabaseHelper;
 import com.example.mindabloom.marvelapp.MarvelApi.MarvelApiClient;
 import com.example.mindabloom.marvelapp.MarvelApi.MarvelApiInterface;
+import com.example.mindabloom.marvelapp.R;
 import com.example.mindabloom.marvelapp.mvp.Presenters.OnSearchResultFinishedListener;
 import com.example.mindabloom.marvelapp.mvp.Presenters.SearchPresenter;
 import com.google.gson.JsonObject;
@@ -23,19 +24,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.mindabloom.marvelapp.MarvelApp.getContext;
+
 /**
  * Created by Ahmed Abdelaziz on 11/9/2016.
  */
 
 public class SearchInteractorImp implements SearchInteractor {
 
-    private Context context;
     private MarvelApiInterface marvelApiInterface;
     private MarvelDatabaseHelper marvelDatabaseHelper;
 
-    public SearchInteractorImp(Context context) {
-        this.context = context;
-        marvelDatabaseHelper = new MarvelDatabaseHelper(context);
+    public SearchInteractorImp() {
+        marvelDatabaseHelper = new MarvelDatabaseHelper(getContext());
     }
 
     @Override
@@ -47,7 +48,7 @@ public class SearchInteractorImp implements SearchInteractor {
         getArgs.put("hash", hash);
         getArgs.put("ts", timestamp);
 
-        marvelApiInterface = MarvelApiClient.getClient(context);
+        marvelApiInterface = MarvelApiClient.getClient(getContext());
 
         Call<ResponseBody> call = marvelApiInterface.searchCharacterByName(getArgs);
 
@@ -70,7 +71,7 @@ public class SearchInteractorImp implements SearchInteractor {
 
                             listener.onSuccess(name, description, imagePath, imageExtension);
                         } else {
-                            listener.onWrongNameError();
+                            listener.onWrongNameError(R.string.wrong_name_error);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -84,14 +85,14 @@ public class SearchInteractorImp implements SearchInteractor {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    listener.onApiError();
+                    listener.onApiError(R.string.api_error);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e("Error", "Internet connection problem");
-                listener.onApiError();
+                listener.onApiError(R.string.api_error);
             }
         });
     }
