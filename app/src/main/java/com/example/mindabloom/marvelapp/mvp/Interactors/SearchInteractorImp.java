@@ -39,6 +39,10 @@ public class SearchInteractorImp implements SearchInteractor {
         marvelDatabaseHelper = new MarvelDatabaseHelper(getContext());
     }
 
+    /*
+    * performs the api request using the retrofit client and the passed args from the presenter
+    * contains a listener to the presenter to inform it with the service result
+    */
     @Override
     public void searchByName(String name, String apiKey, String hash, long timestamp, final OnSearchResultFinishedListener listener) {
 
@@ -58,6 +62,10 @@ public class SearchInteractorImp implements SearchInteractor {
                 if (response.isSuccessful()) {
                     Log.d("Call", "successful");
                     try {
+                        /*
+                        * Here I could have used a model and let retrofit and gson handle the parsing(json to pojo)
+                        * but I wanted to parse the response json object myself
+                        */
                         JSONObject responseBody = new JSONObject(response.body().string());
                         JSONObject data = responseBody.getJSONObject("data");
                         JSONArray results = data.getJSONArray("results");
@@ -69,8 +77,15 @@ public class SearchInteractorImp implements SearchInteractor {
                             String imagePath = thumbnail.getString("path");
                             String imageExtension = thumbnail.getString("extension");
 
+                            /*
+                            * passes the character data to the listener and inform it to perform an action as the
+                            * search was successful and was able to fetch a character
+                            */
                             listener.onSuccess(name, description, imagePath, imageExtension);
                         } else {
+                            /*
+                            * tells the listener to perform an action in case the result was empty
+                            */
                             listener.onWrongNameError(R.string.wrong_name_error);
                         }
                     } catch (Exception e) {
@@ -78,6 +93,9 @@ public class SearchInteractorImp implements SearchInteractor {
                         Log.e("JsonException", e.getMessage());
                     }
                 } else {
+                    /*
+                    * parsing the error body to fetch the error message to print it to the console as required
+                    */
                     try {
                         JSONObject error = new JSONObject(response.errorBody().string());
                         String errorMessage = error.getString("status");
@@ -91,17 +109,27 @@ public class SearchInteractorImp implements SearchInteractor {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                /*
+                * tells the listener to do an action in case of network failure
+                */
                 Log.e("Error", "Internet connection problem");
                 listener.onApiError(R.string.api_error);
             }
         });
     }
 
+    /*
+    * tells the database handler to perform insert query to add the successfully searched name
+    */
     @Override
     public void saveNameInDatabase(String name) {
         marvelDatabaseHelper.addName(name);
     }
 
+    /*
+    * tells the database to perform select query to retrieve the search history
+    */
     @Override
     public List<String> getSearchHistory() {
         return marvelDatabaseHelper.getHistory();
