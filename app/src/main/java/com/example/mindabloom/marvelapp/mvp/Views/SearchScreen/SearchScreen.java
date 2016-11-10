@@ -43,7 +43,6 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
     TextView wrongNameError;
 
     private ProgressDialog progressDialog;
-
     private SearchPresenter presenter;
     private SearchInteractor interactor;
     private MarvelHistoryAdapter marvelHistoryAdapter;
@@ -86,6 +85,12 @@ public class SearchScreen extends AppCompatActivity implements SearchView {
     private MarvelHistoryAdapter.OnItemClickListener onItemClickListener = new MarvelHistoryAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(String name) {
+
+            /*
+            * hide the error if exists
+            * clears the edittext for cleaner screen
+            * calls the presenter's search method
+            */
             hideWrongNameError();
             characterName.setText(null);
             presenter.searchByName(name);
