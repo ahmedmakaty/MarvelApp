@@ -1,5 +1,6 @@
 package com.example.mindabloom.marvelapp.mvp.Presenters;
 
+import com.example.mindabloom.marvelapp.Helpers.Digester;
 import com.example.mindabloom.marvelapp.mvp.Interactors.SearchInteractor;
 import com.example.mindabloom.marvelapp.mvp.Views.SearchScreen.SearchScreen;
 
@@ -25,10 +26,11 @@ public class SearchPresenterImpTest {
     private SearchInteractor interactor;
     @Mock
     private SearchScreen view;
+    @Mock
+    private Digester digester;
 
     @Before
     public void setUp() throws Exception {
-
         presenter = new SearchPresenterImp(interactor);
         presenter.attachView(view);
     }
@@ -37,5 +39,23 @@ public class SearchPresenterImpTest {
     public void checkIfLoadingAppears() {
         presenter.searchByName("");
         verify(view).showLoading();
+    }
+
+    @Test
+    public void checkIfDigests() {
+        presenter.getSearchHistory();
+        verify(view).populateHistoryList(Mockito.anyList());
+    }
+
+    @Test
+    public void checkIfViewDroppedSuccessfullyOnDestroy() {
+        presenter.onDestroy();
+        assertNull(presenter.getView());
+    }
+
+    @Test
+    public void checkIfViewInitiatedSuccessfully() {
+        presenter.attachView(view);
+        assertNotNull(presenter.getView());
     }
 }

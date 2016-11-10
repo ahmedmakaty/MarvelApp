@@ -3,6 +3,8 @@ package com.example.mindabloom.marvelapp.mvp.Presenters;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.ScrollView;
 
 import com.example.mindabloom.marvelapp.Helpers.Digester;
 import com.example.mindabloom.marvelapp.R;
@@ -72,6 +74,11 @@ public class SearchPresenterImp implements SearchPresenter, OnSearchResultFinish
     @Override
     public void onDestroy() {
         view = null;
+    }
+
+    @Override
+    public SearchView getView() {
+        return view;
     }
 
     /*
