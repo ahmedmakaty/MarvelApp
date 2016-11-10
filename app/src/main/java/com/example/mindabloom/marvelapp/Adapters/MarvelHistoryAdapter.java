@@ -18,6 +18,9 @@ import java.util.List;
 
 public class MarvelHistoryAdapter extends RecyclerView.Adapter<MarvelHistoryAdapter.GroupViewHolder> {
 
+    /*
+    * A click listener interface to handle the item clickability in the acticity itself to use the presenter directly
+    */
     public interface OnItemClickListener {
         void onItemClick(String name);
     }

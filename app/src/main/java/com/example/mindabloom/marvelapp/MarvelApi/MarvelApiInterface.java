@@ -13,6 +13,8 @@ import retrofit2.http.QueryMap;
 
 public interface MarvelApiInterface {
 
+    // the request path of the character retrieve
+    // QueryMap takes a hash map and generates a get arguments and appends that to the url
     @GET("/v1/public/characters")
     Call<ResponseBody> searchCharacterByName(@QueryMap HashMap<String, Object> args);
 }

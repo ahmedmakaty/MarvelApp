@@ -9,6 +9,7 @@ import java.util.Properties;
 
 /**
  * Created by Ahmed Abdelaziz on 11/9/2016.
+ * Properties reader is used to open and read a properties file
  */
 
 public class PropertiesReader {

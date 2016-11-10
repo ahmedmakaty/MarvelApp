@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * Created by Ahmed Abdelaziz on 11/10/2016.
+ * Our database only has one table is called history, this table consists of two columns id and name
+ * Implemented here the methods to add a row to the table and the one to retrieve the latest added items in desc order
  */
 
 public class MarvelDatabaseHelper extends SQLiteOpenHelper {
@@ -62,8 +64,16 @@ public class MarvelDatabaseHelper extends SQLiteOpenHelper {
 
         List<String> results = new ArrayList<String>();
         SQLiteDatabase db = this.getWritableDatabase();
+
+        /*
+        * I am using this simple query to handle the problem of distinct values and latest searched items
+        */
         String selectQuery = "SELECT DISTINCT " + NAME + " FROM " + TABLE_NAME + " ORDER BY " + ID + " DESC LIMIT 5";
         Cursor cursor = db.rawQuery(selectQuery, null);
+
+        /*
+        * iterating through the query result with the cursor and adding every row to the list
+        */
         if(cursor.moveToFirst()){
             do {
                 results.add(cursor.getString(0));

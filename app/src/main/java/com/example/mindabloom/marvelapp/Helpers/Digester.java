@@ -9,6 +9,9 @@ import java.security.MessageDigest;
  */
 
 public class Digester {
+    /*
+    * used to digest a string and generates the corresponding md5 hash
+    */
     public static String md5Digest(String s) {
         MessageDigest digest;
         try {

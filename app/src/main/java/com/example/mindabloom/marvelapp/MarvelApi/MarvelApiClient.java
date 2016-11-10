@@ -24,11 +24,15 @@ public class MarvelApiClient {
     private static final String TAG = "MarvelApiClient";
 
     private static MarvelApiInterface apiInterface;
+    // this is the base url of the used api
     private static String baseURL = "http://gateway.marvel.com:80";
 
     public static MarvelApiInterface getClient(Context context) {
         if (apiInterface == null) {
 
+            /*
+            * setting the http configurations for the client
+            */
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -61,6 +65,9 @@ public class MarvelApiClient {
 
         }
 
+        /*
+        * intercept is used for adding headers to the request
+        */
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();

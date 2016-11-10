@@ -10,6 +10,9 @@ import com.example.mindabloom.marvelapp.Helpers.PropertiesReader;
 
 public class PropertiesReaderInjector {
 
+    /*
+    * this is used to inject a propertiesReader object without using the constructor every time we use the class
+    */
     public static PropertiesReader propertiesReader(Context context){
         return new PropertiesReader(context);
     }
